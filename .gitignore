@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# uv
+.uv/
+uv.lock
+
+# Database
+*.db
+*.sqlite3
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.coverage
+coverage.xml
+
+# Agent outputs (generated — not source)
+reports/
+docs/architecture.md
+docs/api-guide.md
+CHANGELOG.md

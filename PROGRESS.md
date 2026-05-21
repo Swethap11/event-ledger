@@ -1,0 +1,21 @@
+# Progress Ledger
+
+| Step | Status | Notes |
+|---|---|---|
+| Docs foundation — APPROACH, ARCHITECTURE, SOLUTION | Done | Comparison, full architecture diagram, per-layer stack decisions |
+| Phase 1: Project foundation — pyproject, env, gitignore | Done | All deps locked, uv + Ruff configured, .env.example ready |
+| Phase 1: Agent pipeline — LangChain orchestrator | Done | pipeline.py sequences all 6 agents with retry logic and summary |
+| Phase 1: Agent files — 6 agents + client | Done | design, dev, security, qa, docs, changelog — all structured outputs |
+| Phase 1: Validators — 4 anti-hallucination validators | Done | syntax, lint, server (uvicorn), contract (httpx) — all execute real code |
+| Phase 1: Prompt files — 10 versioned prompts | Done | One per module, exact class/field signatures to prevent hallucination |
+| Phase 1: Guardrails — LangChain callback hooks | Done | CodeGuardrailHandler blocks TODO/placeholders, LoggingHandler on every call |
+| Phase 1: LangSmith evals | Done | 4 evaluators scoring syntax, placeholders, security coverage, QA coverage |
+| Phase 2: Run Design Agent | Pending | Produces docs/architecture.md + Mermaid diagram |
+| Phase 3: Run Dev Agent — core + models + repositories | Pending | Generates app/core/, app/models/, app/repositories/ |
+| Phase 4: Run Dev Agent — services + routes + main | Pending | Generates app/services/, app/routes/, app/main.py |
+| Phase 5: Run Security Agent | Pending | Produces reports/security-review.md |
+| Phase 6: Run QA Agent | Pending | Generates tests/ + reports/coverage.md + reports/functional.md |
+| Phase 7: Run Docs + Changelog Agents | Pending | Produces docs/api-guide.md + CHANGELOG.md |
+| Phase 8: GitHub Actions CI | Pending | agents.yml + tests.yml |
+| Phase 9: README + Docker | Pending | README.md + docker-compose.yml |
+| Phase 10: MCP server (bonus) | Pending | Exposes ledger as AI-callable tools |

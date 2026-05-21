@@ -25,7 +25,7 @@ def run(openapi_spec: dict, spec_content: str) -> DocsOutput:
     llm = get_llm(temperature=0.2)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", prompt_template),
+        ("system", "{system_prompt}"),
         ("human", (
             "Original specification:\n{spec}\n\n"
             "OpenAPI spec from live app:\n{openapi}\n\n"
@@ -34,7 +34,7 @@ def run(openapi_spec: dict, spec_content: str) -> DocsOutput:
     ])
 
     chain = prompt | llm.with_structured_output(DocsOutput)
-    return chain.invoke({"spec": spec_content, "openapi": str(openapi_spec)})
+    return chain.invoke({"system_prompt": prompt_template, "spec": spec_content, "openapi": str(openapi_spec)})
 
 
 def save(output: DocsOutput, output_path: Path = Path("docs/api-guide.md")) -> None:

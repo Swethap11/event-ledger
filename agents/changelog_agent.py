@@ -26,12 +26,12 @@ def run(git_log: str) -> ChangelogOutput:
     llm = get_llm(temperature=0.2)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", prompt_template),
+        ("system", "{system_prompt}"),
         ("human", "Git log:\n\n{log}\n\nGenerate a structured CHANGELOG.md."),
     ])
 
     chain = prompt | llm.with_structured_output(ChangelogOutput)
-    return chain.invoke({"log": git_log})
+    return chain.invoke({"system_prompt": prompt_template, "log": git_log})
 
 
 def save(output: ChangelogOutput, output_path: Path = Path("CHANGELOG.md")) -> None:

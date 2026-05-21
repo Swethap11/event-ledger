@@ -18,4 +18,4 @@
 | Phase 7: Run Docs + Changelog Agents | Done | docs/api-guide.md + CHANGELOG.md generated |
 | Phase 8: GitHub Actions CI | Done | tests.yml (pytest + coverage), agents.yml (security + QA on push) |
 | Phase 9: README + Docker | Done | README.md + Dockerfile + docker-compose.yml |
-| Phase 10: MCP server (bonus) | Pending | Exposes ledger as AI-callable tools |
+| Phase 10: MCP server (bonus) | Partial | mcp_server.py built — install mcp[cli] + wire Claude Desktop config to complete |

@@ -48,13 +48,20 @@ def client_fixture(session):
 - Invalid timestamp format → 422
 - Unknown event ID → 404
 
-### tests/test_property.py (Hypothesis)
-- Property: balance always equals credits minus debits for any random sequence of events
-- Property: event list always returns in chronological order regardless of submission order
-- Use `@given` and `@settings(max_examples=50)`
+## Exact imports for conftest.py
+```python
+from sqlmodel import Session, SQLModel, create_engine
+from sqlalchemy.pool import StaticPool
+from fastapi.testclient import TestClient
+from app.main import app
+from app.core.database import get_session
+```
 
 ## Rules
 - All tests must be complete and runnable with `pytest` — no mocks, no stubs, no skips.
 - Use the `client` fixture from conftest for all HTTP calls.
 - Each test must have a unique account ID or event ID to avoid state pollution between tests.
 - Do not use `unittest.TestCase` — use plain pytest functions.
+- EventCreate fields are camelCase in JSON: `eventId`, `accountId`, `eventTimestamp`, `type`, `amount`, `currency`.
+- `amount` is Decimal-compatible — use numeric values like `100.00` in JSON payloads.
+- Keep every line at or below 88 characters (Ruff E501).

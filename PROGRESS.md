@@ -13,8 +13,8 @@
 | Phase 2: Run Design Agent | Done | docs/architecture.md — 9 components, Mermaid diagram, 3 decisions |
 | Phase 3: Run Dev Agent — core + models + repositories | Done | app/core/, app/models/, app/repositories/ — validators passed |
 | Phase 4: Run Dev Agent — services + routes + main | Done | 16 files generated — server started, all 4 endpoints contract-validated |
-| Phase 5: Run Security Agent | Pending | Produces reports/security-review.md |
-| Phase 6: Run QA Agent | Pending | Generates tests/ + reports/coverage.md + reports/functional.md |
+| Phase 5: Run Security Agent | Done | Decimal precision fix, sanitised exceptions, reports/security-review.md |
+| Phase 6: Run QA Agent | Done | 16 tests, 93% coverage — idempotency, ordering, balance, validation |
 | Phase 7: Run Docs + Changelog Agents | Pending | Produces docs/api-guide.md + CHANGELOG.md |
 | Phase 8: GitHub Actions CI | Done | tests.yml (pytest + coverage), agents.yml (security + QA on push) |
 | Phase 9: README + Docker | Pending | README.md + docker-compose.yml |

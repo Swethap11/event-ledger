@@ -12,4 +12,6 @@ def get_llm(temperature: float = 0.1) -> ChatOpenAI:
         api_key=token,
         base_url="https://models.inference.ai.azure.com",
         temperature=temperature,
+        timeout=120,
+        max_retries=1,
     )

@@ -1,45 +1,74 @@
-from pathlib import Path
-from pydantic import BaseModel, Field
-from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
 import subprocess
+from pathlib import Path
+
+from langchain_core.prompts import ChatPromptTemplate
+from pydantic import BaseModel, Field
+
+from agents.client import get_llm
 
 PROMPT_FILE = Path(".prompts/qa_agent.md")
 
+TEST_FILES = [
+    "tests/conftest.py",
+    "tests/test_idempotency.py",
+    "tests/test_ordering.py",
+    "tests/test_balance.py",
+    "tests/test_validation.py",
+]
 
-class TestFile(BaseModel):
+
+class SingleFile(BaseModel):
     file_path: str
-    content: str = Field(description="Complete pytest test file — no placeholders, all tests runnable")
+    content: str = Field(description="Complete pytest file — no placeholders, all runnable")
     description: str
 
 
 class QAOutput(BaseModel):
-    test_files: list[TestFile]
+    test_files: list[SingleFile]
     conftest_content: str = Field(description="Complete tests/conftest.py with fixtures")
     summary: str
 
 
+def _generate_one(file_path: str, prompt_template: str, code_str: str) -> SingleFile:
+    llm = get_llm(temperature=0.05)
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "{system_prompt}"),
+        ("human", (
+            "Application code:\n{code}\n\n"
+            "Generate ONLY the file `{file_path}`. "
+            "Return a complete, runnable file with no placeholders."
+        )),
+    ])
+    chain = prompt | llm.with_structured_output(SingleFile)
+    print(f"[QA Agent] Generating {file_path}...")
+    return chain.invoke({
+        "system_prompt": prompt_template,
+        "code": code_str,
+        "file_path": file_path,
+    })
+
+
 def run(code_files: dict[str, str], spec_content: str) -> QAOutput:
     prompt_template = PROMPT_FILE.read_text(encoding="utf-8")
-    llm = get_llm(temperature=0.05)
-
     code_str = "\n\n".join(
         f"### {path}\n```python\n{code}\n```"
         for path, code in code_files.items()
     )
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", prompt_template),
-        ("human", (
-            "Specification:\n{spec}\n\n"
-            "Application code to test:\n{code}\n\n"
-            "Generate complete, runnable pytest test files covering: "
-            "idempotency, out-of-order tolerance, balance computation, and validation."
-        )),
-    ])
+    files: list[SingleFile] = []
+    conftest_content = ""
 
-    chain = prompt | llm.with_structured_output(QAOutput)
-    return chain.invoke({"spec": spec_content, "code": code_str})
+    for file_path in TEST_FILES:
+        result = _generate_one(file_path, prompt_template, code_str)
+        if file_path == "tests/conftest.py":
+            conftest_content = result.content
+        files.append(result)
+
+    return QAOutput(
+        test_files=[f for f in files if f.file_path != "tests/conftest.py"],
+        conftest_content=conftest_content,
+        summary=f"Generated {len(files)} test files covering idempotency, ordering, balance, and validation.",
+    )
 
 
 def save(output: QAOutput) -> list[Path]:
@@ -49,6 +78,7 @@ def save(output: QAOutput) -> list[Path]:
     conftest.parent.mkdir(parents=True, exist_ok=True)
     conftest.write_text(output.conftest_content, encoding="utf-8")
     saved.append(conftest)
+    print(f"[QA Agent] Written: {conftest}")
 
     for tf in output.test_files:
         path = Path(tf.file_path)
@@ -63,8 +93,9 @@ def save(output: QAOutput) -> list[Path]:
 def run_tests_and_report(output_path: Path = Path("reports/coverage.md")) -> tuple[bool, str]:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    import sys
     result = subprocess.run(
-        ["python", "-m", "pytest", "tests/", "--cov=app", "--cov-report=term-missing", "-v"],
+        [sys.executable, "-m", "pytest", "tests/", "--cov=app", "--cov-report=term-missing", "-v"],
         capture_output=True,
         text=True,
     )

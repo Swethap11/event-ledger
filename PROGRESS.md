@@ -11,7 +11,7 @@
 | Phase 1: Guardrails — LangChain callback hooks | Done | CodeGuardrailHandler blocks TODO/placeholders, LoggingHandler on every call |
 | Phase 1: LangSmith evals | Done | 4 evaluators scoring syntax, placeholders, security coverage, QA coverage |
 | Phase 2: Run Design Agent | Done | docs/architecture.md — 9 components, Mermaid diagram, 3 decisions |
-| Phase 3: Run Dev Agent — core + models + repositories | Pending | Generates app/core/, app/models/, app/repositories/ |
+| Phase 3: Run Dev Agent — core + models + repositories | Done | app/core/, app/models/, app/repositories/ — validators passed |
 | Phase 4: Run Dev Agent — services + routes + main | Pending | Generates app/services/, app/routes/, app/main.py |
 | Phase 5: Run Security Agent | Pending | Produces reports/security-review.md |
 | Phase 6: Run QA Agent | Pending | Generates tests/ + reports/coverage.md + reports/functional.md |

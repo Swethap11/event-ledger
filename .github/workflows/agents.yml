@@ -1,0 +1,75 @@
+name: AI Agents
+
+on: [push]
+
+jobs:
+  security-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --extra agents --extra dev
+
+      - name: Run Security Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_MODELS_TOKEN }}
+          LANGCHAIN_TRACING_V2: "true"
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: event-ledger-ci
+        run: uv run python -c "
+          from agents import security_agent
+          import pathlib, json
+          code = {str(f): f.read_text() for f in pathlib.Path('app').rglob('*.py')}
+          out = security_agent.run(code)
+          security_agent.save(out)
+          print('Risk level:', out.risk_level)
+          print('Approved:', out.approved)
+          "
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-review
+          path: reports/security-review.md
+
+  qa-agent:
+    runs-on: ubuntu-latest
+    needs: security-agent
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --extra agents --extra dev
+
+      - name: Run QA Agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_MODELS_TOKEN }}
+          LANGCHAIN_TRACING_V2: "true"
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: event-ledger-ci
+        run: uv run python -c "
+          from agents import qa_agent
+          import pathlib
+          spec = pathlib.Path('event-ledger-candidate-handout.md').read_text()
+          code = {str(f): f.read_text() for f in pathlib.Path('app').rglob('*.py')}
+          out = qa_agent.run(code, spec)
+          qa_agent.save(out)
+          "
+
+      - name: Run tests and generate coverage
+        run: uv run pytest tests/ --cov=app --cov-report=term-missing -v
+
+      - name: Upload QA reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: reports/

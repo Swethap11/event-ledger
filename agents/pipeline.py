@@ -7,8 +7,6 @@ import os
 import sys
 import time
 from pathlib import Path
-from dotenv import load_dotenv if False else None  # noqa: F401
-
 # Load .env if present
 env_file = Path(".env")
 if env_file.exists():

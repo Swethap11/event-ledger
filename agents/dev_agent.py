@@ -75,8 +75,9 @@ def run(
 
     feedback_str = f"\n\nPrevious attempt failed. Fix these issues:\n{feedback}" if feedback else ""
 
+    # System prompt is passed as one variable so JSON/code braces are not parsed as templates.
     prompt = ChatPromptTemplate.from_messages([
-        ("system", prompt_template + feedback_str),
+        ("system", "{system_prompt}"),
         ("human", (
             "Specification:\n{spec}\n\n"
             "Architecture:\n{architecture}\n\n"
@@ -89,6 +90,7 @@ def run(
     chain = prompt | llm.with_structured_output(ModuleOutput)
     return chain.invoke(
         {
+            "system_prompt": prompt_template + feedback_str,
             "spec": spec_content,
             "architecture": architecture_content,
             "existing": existing_str,

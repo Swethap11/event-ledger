@@ -1,6 +1,6 @@
 """
 Phase 5 — Security Agent
-Reviews all generated app/ code and produces reports/security-review.md
+Reviews all app/ code and produces reports/security-review.md
 Run: python run_phase5.py
 """
 
@@ -63,7 +63,6 @@ def main() -> None:
 
     print(f"\n[Phase 5] Done.")
     print(f"  Risk level : {output.risk_level}")
-    print(f"  Approved   : {output.approved}")
     print(f"  Findings   : {len(output.findings)}")
     print()
 
@@ -75,8 +74,11 @@ def main() -> None:
 
     print(f"  Full report: reports/security-review.md")
 
-    if not output.approved:
-        print("\n  WARNING: HIGH severity findings — review before committing.")
+    high = [f for f in output.findings if f.severity == "HIGH"]
+    if high:
+        print(f"\n  WARNING: {len(high)} HIGH severity finding(s) — review before committing.")
+    else:
+        print(f"\n  Approved — no HIGH severity findings.")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from enum import StrEnum
 from typing import Annotated, Any
 
@@ -15,7 +16,7 @@ class EventCreate(BaseModel):
     eventId: str
     accountId: str
     type: EventType
-    amount: Annotated[float, Field(gt=0, description="Must be greater than 0")]
+    amount: Annotated[Decimal, Field(gt=0, description="Must be greater than 0")]
     currency: str
     eventTimestamp: datetime
     metadata: dict[str, Any] | None = None
@@ -25,7 +26,7 @@ class EventResponse(BaseModel):
     eventId: str
     accountId: str
     type: EventType
-    amount: float
+    amount: Decimal
     currency: str
     eventTimestamp: datetime
     metadata: dict[str, Any] | None = None
@@ -34,7 +35,7 @@ class EventResponse(BaseModel):
 
 class BalanceResponse(BaseModel):
     accountId: str
-    balance: float
+    balance: Decimal
     currency: str
 
 

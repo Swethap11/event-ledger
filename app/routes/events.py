@@ -23,8 +23,12 @@ async def submit_event(
             content=event_response.model_dump(mode="json"),
             status_code=201 if created else 200,
         )
-    except Exception as e:
-        return JSONResponse(content={"detail": str(e)}, status_code=400)
+    except EventNotFoundError as e:
+        return JSONResponse(content={"detail": str(e)}, status_code=404)
+    except Exception:
+        return JSONResponse(
+            content={"detail": "Internal server error"}, status_code=500
+        )
 
 
 @router.get("/{event_id}", response_model=EventResponse)

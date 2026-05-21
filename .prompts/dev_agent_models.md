@@ -19,7 +19,9 @@ class Event(SQLModel, table=True):
     event_id: str = Field(primary_key=True)
     account_id: str = Field(index=True, nullable=False)
     type: str = Field(nullable=False)          # "CREDIT" or "DEBIT"
-    amount: float = Field(nullable=False)
+    amount: Decimal = Field(                   # MUST be Decimal, not float
+        sa_column=Column(Numeric(precision=18, scale=8), nullable=False)
+    )
     currency: str = Field(nullable=False)
     event_timestamp: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False, index=True))
     metadata_json: str | None = Field(default=None)   # JSON serialised dict
@@ -52,7 +54,7 @@ class EventCreate(BaseModel):
     eventId: str
     accountId: str
     type: EventType
-    amount: Annotated[float, Field(gt=0, description="Must be greater than 0")]
+    amount: Annotated[Decimal, Field(gt=0, description="Must be greater than 0")]
     currency: str
     eventTimestamp: datetime
     metadata: dict[str, Any] | None = None
@@ -61,7 +63,7 @@ class EventResponse(BaseModel):
     eventId: str
     accountId: str
     type: EventType
-    amount: float
+    amount: Decimal
     currency: str
     eventTimestamp: datetime
     metadata: dict[str, Any] | None = None
@@ -69,7 +71,7 @@ class EventResponse(BaseModel):
 
 class BalanceResponse(BaseModel):
     accountId: str
-    balance: float
+    balance: Decimal
     currency: str
 
 class ErrorResponse(BaseModel):
@@ -77,6 +79,9 @@ class ErrorResponse(BaseModel):
 ```
 
 ## Rules
-- Import `Column`, `DateTime` from `sqlalchemy` for the `event_timestamp` field.
+- Import `Column`, `DateTime`, `Numeric` from `sqlalchemy` for ORM fields.
+- Import `Decimal` from `decimal` for all amount/balance fields.
+- Use `from typing import Annotated, Any` — do NOT use `pydantic.typing`.
 - No placeholders. No TODOs. Complete files only.
 - All imports must resolve with sqlmodel, pydantic, sqlalchemy installed.
+- Keep every line at or below 88 characters (Ruff E501).

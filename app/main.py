@@ -8,9 +8,7 @@ from app.routes import accounts, events
 
 app = FastAPI(
     title="Event Ledger API",
-    description=(
-        "Idempotent financial transaction ledger with out-of-order event support."
-    ),
+    description="Idempotent financial ledger with out-of-order event support.",
     version="1.0.0",
 )
 
@@ -26,22 +24,19 @@ app.include_router(events.router)
 app.include_router(accounts.router)
 
 
-# Startup event to initialize the database
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
     init_db()
 
 
-# Health check endpoint
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
 
 
-# Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger = get_logger(__name__)
+    logger = get_logger()
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,

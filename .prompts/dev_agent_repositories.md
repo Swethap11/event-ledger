@@ -23,10 +23,10 @@ class EventRepository:
     # Serialises metadata dict to JSON string
     # Sets received_at = datetime.utcnow()
 
-    def get_balance(self, account_id: str) -> tuple[float, str | None]: ...
+    def get_balance(self, account_id: str) -> tuple[Decimal, str | None]: ...
     # Returns (balance, currency)
-    # balance = sum(CREDIT amounts) - sum(DEBIT amounts)
-    # Round to 10 decimal places to avoid float drift
+    # Use func.sum() via SQLModel select — MUST use Decimal, NOT float
+    # balance = Decimal(credit_sum) - Decimal(debit_sum)
 
     def account_exists(self, account_id: str) -> bool: ...
     # SELECT ... LIMIT 1
@@ -39,5 +39,9 @@ class EventRepository:
 ## Rules
 - Use SQLModel `select()` for all queries — never raw SQL strings.
 - Idempotency is enforced by `event_id` being the primary key. Do NOT do application-level "check if exists before insert". Let the DB raise on duplicate and catch it in the service layer.
+- Import `Decimal` from `decimal` and use it for all amount/balance types.
+- EventCreate fields are camelCase: use `payload.eventId`, `payload.accountId`, `payload.eventTimestamp`.
+- AuditLog IP field is `ip_address`, not `ip`.
 - No placeholders. No TODOs. Complete file only.
 - Import Event, AuditLog from app.models.orm and EventCreate from app.models.schemas.
+- Keep every line at or below 88 characters (Ruff E501).

@@ -10,12 +10,12 @@
 | Phase 1: Prompt files — 10 versioned prompts | Done | One per module, exact class/field signatures to prevent hallucination |
 | Phase 1: Guardrails — LangChain callback hooks | Done | CodeGuardrailHandler blocks TODO/placeholders, LoggingHandler on every call |
 | Phase 1: LangSmith evals | Done | 4 evaluators scoring syntax, placeholders, security coverage, QA coverage |
-| Phase 2: Run Design Agent | Pending | Produces docs/architecture.md + Mermaid diagram |
+| Phase 2: Run Design Agent | Done | docs/architecture.md — 9 components, Mermaid diagram, 3 decisions |
 | Phase 3: Run Dev Agent — core + models + repositories | Pending | Generates app/core/, app/models/, app/repositories/ |
 | Phase 4: Run Dev Agent — services + routes + main | Pending | Generates app/services/, app/routes/, app/main.py |
 | Phase 5: Run Security Agent | Pending | Produces reports/security-review.md |
 | Phase 6: Run QA Agent | Pending | Generates tests/ + reports/coverage.md + reports/functional.md |
 | Phase 7: Run Docs + Changelog Agents | Pending | Produces docs/api-guide.md + CHANGELOG.md |
-| Phase 8: GitHub Actions CI | Pending | agents.yml + tests.yml |
+| Phase 8: GitHub Actions CI | Done | tests.yml (pytest + coverage), agents.yml (security + QA on push) |
 | Phase 9: README + Docker | Pending | README.md + docker-compose.yml |
 | Phase 10: MCP server (bonus) | Pending | Exposes ledger as AI-callable tools |

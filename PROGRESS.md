@@ -19,3 +19,4 @@
 | Phase 8: GitHub Actions CI | Done | tests.yml (pytest + coverage), agents.yml (security + QA on push) |
 | Phase 9: README + Docker | Done | README.md + Dockerfile + docker-compose.yml |
 | Phase 10: MCP server (bonus) | Partial | mcp_server.py built — install mcp[cli] + wire Claude Desktop config to complete |
+| Phase 11: Agentic production monitor | Done | ErrorCaptureMiddleware → logs/errors.jsonl → monitor_agent → auto-fix + server restart |

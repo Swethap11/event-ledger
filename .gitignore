@@ -41,3 +41,6 @@ coverage.xml
 reports/
 docs/api-guide.md
 CHANGELOG.md
+
+# Monitor runtime logs
+logs/

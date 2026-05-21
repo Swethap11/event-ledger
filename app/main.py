@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.database import init_db
 from app.core.logging_config import get_logger
+from app.middleware.error_capture import ErrorCaptureMiddleware
 from app.routes import accounts, events
 
 app = FastAPI(
@@ -11,6 +12,9 @@ app = FastAPI(
     description="Idempotent financial ledger with out-of-order event support.",
     version="1.0.0",
 )
+
+# Error capture middleware — writes 5xx events to logs/errors.jsonl for monitor agent
+app.add_middleware(ErrorCaptureMiddleware)
 
 # CORS middleware
 app.add_middleware(

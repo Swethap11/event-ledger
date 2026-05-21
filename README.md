@@ -6,23 +6,95 @@ Event Ledger API — an idempotent financial transaction service built with an *
 
 REST API for ingesting financial events with guarantees for:
 
-- **Idempotency** — duplicate `eventId` returns the existing record
-- **Out-of-order delivery** — reads ordered by `eventTimestamp`, not arrival time
-- **Balance correctness** — derived from the event log on read
+- **Idempotency** — duplicate `eventId` returns the existing record (`200`), no double-counting
+- **Out-of-order delivery** — reads ordered by `eventTimestamp ASC`, not arrival time
+- **Balance correctness** — `Decimal` precision, derived from the full event log on read
+- **Audit trail** — every API call writes an immutable `AuditLog` row
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `POST` | `/events` | Ingest a transaction event |
-| `GET` | `/events/{id}` | Fetch a single event |
-| `GET` | `/events?account={accountId}` | List events for an account |
-| `GET` | `/accounts/{accountId}/balance` | Net balance (credits − debits) |
+| Method | Endpoint | Status | Purpose |
+|---|---|---|---|
+| `POST` | `/events` | `201` / `200` | Ingest a transaction event |
+| `GET` | `/events/{id}` | `200` / `404` | Fetch a single event |
+| `GET` | `/events?account={accountId}` | `200` | List events for an account |
+| `GET` | `/accounts/{accountId}/balance` | `200` / `404` | Net balance (credits − debits) |
+| `GET` | `/health` | `200` | Health check |
 
 ## Stack
 
 - **Python 3.12** · **FastAPI** · **SQLModel** · **SQLite**
 - **LangChain** agent pipeline (design, dev, security, QA, docs, changelog)
-- **Validators** — syntax, lint, server start, OpenAPI contract
-- **Testing** — pytest, Hypothesis, Schemathesis
+- **GitHub Models** (gpt-4o-mini) — free LLM via OpenAI-compatible endpoint
+- **LangSmith** — tracing and evaluations
+- **Validators** — syntax, lint (Ruff), server start, OpenAPI contract (httpx)
+- **Testing** — pytest + pytest-cov, 16 tests, 93% coverage
+
+## Quick Start
+
+```bash
+# Install dependencies
+uv sync --extra dev --extra agents
+
+# Copy env and add your GitHub Models token
+cp .env.example .env
+
+# Run the API
+uv run uvicorn app.main:app --reload
+```
+
+API docs: http://localhost:8000/docs
+
+### Run tests
+
+```bash
+uv run pytest tests/ --cov=app --cov-report=term-missing
+```
+
+### Example
+
+```bash
+curl -X POST http://localhost:8000/events \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": "evt-001",
+    "accountId": "acct-123",
+    "type": "CREDIT",
+    "amount": 150.00,
+    "currency": "USD",
+    "eventTimestamp": "2026-05-15T10:00:00Z"
+  }'
+
+curl http://localhost:8000/accounts/acct-123/balance
+```
+
+## Docker
+
+```bash
+docker compose up
+```
+
+API available at http://localhost:8000
+
+## Agent Pipeline
+
+```
+Design Agent → Dev Agent (×6 modules) → Security Agent → QA Agent → Docs + Changelog
+     ↓                 ↓                      ↓               ↓
+architecture.md   app/ (16 files)      security-review.md  16 tests, 93% coverage
+                  contract-validated
+```
+
+Run individual phases:
+
+```bash
+uv run python run_phase2.py   # Design Agent
+uv run python run_phase3.py   # Dev — core, models, repositories
+uv run python run_phase4.py   # Dev — services, routes, main
+uv run python run_phase5.py   # Security review
+uv run python run_phase6.py   # QA tests
+uv run python run_phase7.py   # Docs + changelog
+```
+
+Requires `GITHUB_TOKEN` in `.env` (see `.env.example`).
 
 ## Docs
 
@@ -32,24 +104,8 @@ REST API for ingesting financial events with guarantees for:
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System design and agent pipeline |
 | [SOLUTION.md](SOLUTION.md) | Stack decisions per layer |
 | [PROGRESS.md](PROGRESS.md) | Build progress ledger |
-
-## Quick start
-
-```bash
-# Install dependencies (uv recommended)
-uv sync --extra dev --extra agents
-
-# Copy env template and add your GitHub Models token
-cp .env.example .env
-
-# Run the agent pipeline (generates app code + reports)
-python -m agents.pipeline
-
-# Or run the API directly once app/ is generated
-uvicorn app.main:app --reload
-```
-
-API docs: `http://localhost:8000/docs`
+| [docs/api-guide.md](docs/api-guide.md) | Full API reference |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 ## Repository
 

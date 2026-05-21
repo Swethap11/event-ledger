@@ -17,5 +17,5 @@
 | Phase 6: Run QA Agent | Done | 16 tests, 93% coverage — idempotency, ordering, balance, validation |
 | Phase 7: Run Docs + Changelog Agents | Done | docs/api-guide.md + CHANGELOG.md generated |
 | Phase 8: GitHub Actions CI | Done | tests.yml (pytest + coverage), agents.yml (security + QA on push) |
-| Phase 9: README + Docker | Pending | README.md + docker-compose.yml |
+| Phase 9: README + Docker | Done | README.md + Dockerfile + docker-compose.yml |
 | Phase 10: MCP server (bonus) | Pending | Exposes ledger as AI-callable tools |

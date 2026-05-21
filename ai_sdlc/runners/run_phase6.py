@@ -38,10 +38,10 @@ if not os.environ.get("GITHUB_TOKEN"):
 if not os.environ.get("GITHUB_TOKEN"):
     raise EnvironmentError("GITHUB_TOKEN not set. Add it to .env")
 
-from agents import qa_agent
-from validators.syntax_validator import validate_syntax
+from ai_sdlc.agents import qa_agent
+from ai_sdlc.validators.syntax_validator import validate_syntax
 
-SPEC_PATH = Path("event-ledger-candidate-handout.md")
+SPEC_PATH = Path("docs/project/handout.md")
 APP_DIR = Path("app")
 
 

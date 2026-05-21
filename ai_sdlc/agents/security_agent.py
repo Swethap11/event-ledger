@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Literal
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
+from ai_sdlc.agents.client import get_llm
 
-PROMPT_FILE = Path(".prompts/security_agent.md")
+PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "security_agent.md"
 
 
 class Finding(BaseModel):

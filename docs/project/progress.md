@@ -20,3 +20,4 @@
 | Phase 9: README + Docker | Done | README.md + Dockerfile + docker-compose.yml |
 | Phase 10: MCP server (bonus) | Partial | mcp_server.py built — install mcp[cli] + wire Claude Desktop config to complete |
 | Phase 11: Agentic production monitor | Done | ErrorCaptureMiddleware → logs/errors.jsonl → monitor_agent → auto-fix + server restart |
+| Docs: APPROACH, ARCHITECTURE, WALKTHROUGH | Done | Removed traditional comparison, updated paths, added full build walkthrough |

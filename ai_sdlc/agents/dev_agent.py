@@ -2,18 +2,19 @@ from pathlib import Path
 from typing import Literal
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
-from agents.guardrails import get_callbacks
+from ai_sdlc.agents.client import get_llm
+from ai_sdlc.agents.guardrails import get_callbacks
 
 MODULE = Literal["core", "models", "repositories", "services", "routes", "main"]
 
+_PROMPTS = Path(__file__).parent.parent / "prompts"
 PROMPT_FILES: dict[str, Path] = {
-    "core":         Path(".prompts/dev_agent_core.md"),
-    "models":       Path(".prompts/dev_agent_models.md"),
-    "repositories": Path(".prompts/dev_agent_repositories.md"),
-    "services":     Path(".prompts/dev_agent_services.md"),
-    "routes":       Path(".prompts/dev_agent_routes.md"),
-    "main":         Path(".prompts/dev_agent_main.md"),
+    "core":         _PROMPTS / "dev_agent_core.md",
+    "models":       _PROMPTS / "dev_agent_models.md",
+    "repositories": _PROMPTS / "dev_agent_repositories.md",
+    "services":     _PROMPTS / "dev_agent_services.md",
+    "routes":       _PROMPTS / "dev_agent_routes.md",
+    "main":         _PROMPTS / "dev_agent_main.md",
 }
 
 OUTPUT_FILES: dict[str, list[Path]] = {

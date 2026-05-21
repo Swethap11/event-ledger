@@ -22,7 +22,7 @@ jobs:
           LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
           LANGCHAIN_PROJECT: event-ledger-ci
         run: uv run python -c "
-          from agents import security_agent
+          from ai_sdlc.agents import security_agent
           import pathlib, json
           code = {str(f): f.read_text() for f in pathlib.Path('app').rglob('*.py')}
           out = security_agent.run(code)
@@ -57,9 +57,9 @@ jobs:
           LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
           LANGCHAIN_PROJECT: event-ledger-ci
         run: uv run python -c "
-          from agents import qa_agent
+          from ai_sdlc.agents import qa_agent
           import pathlib
-          spec = pathlib.Path('event-ledger-candidate-handout.md').read_text()
+          spec = pathlib.Path('docs/project/handout.md').read_text()
           code = {str(f): f.read_text() for f in pathlib.Path('app').rglob('*.py')}
           out = qa_agent.run(code, spec)
           qa_agent.save(out)

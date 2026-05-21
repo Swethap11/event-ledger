@@ -38,7 +38,7 @@ if not os.environ.get("GITHUB_TOKEN"):
 if not os.environ.get("GITHUB_TOKEN"):
     raise EnvironmentError("GITHUB_TOKEN not set. Add it to .env")
 
-from agents import security_agent
+from ai_sdlc.agents import security_agent
 
 APP_DIR = Path("app")
 

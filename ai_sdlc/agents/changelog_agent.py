@@ -1,10 +1,10 @@
 from pathlib import Path
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
+from ai_sdlc.agents.client import get_llm
 import subprocess
 
-PROMPT_FILE = Path(".prompts/changelog_agent.md")
+PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "changelog_agent.md"
 
 
 class ChangelogOutput(BaseModel):

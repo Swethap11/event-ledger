@@ -103,7 +103,7 @@ def build_dev_agent_dataset(client: Client, dataset_name: str = "dev-agent-evals
         description="Evaluates Dev Agent code generation quality",
     )
 
-    spec = Path("event-ledger-candidate-handout.md")
+    spec = Path("docs/project/handout.md")
     spec_text = spec.read_text(encoding="utf-8") if spec.exists() else "Event Ledger API spec"
 
     client.create_examples(
@@ -136,13 +136,13 @@ def run_dev_agent_evals() -> None:
     client = Client()
     dataset_name = build_dev_agent_dataset(client)
 
-    from agents.client import get_llm
-    from agents import dev_agent
+    from ai_sdlc.agents.client import get_llm
+    from ai_sdlc.agents import dev_agent
     from langchain_core.runnables import RunnableLambda
 
-    spec = Path("event-ledger-candidate-handout.md")
+    spec = Path("docs/project/handout.md")
     spec_text = spec.read_text(encoding="utf-8") if spec.exists() else ""
-    arch = Path("docs/architecture.md")
+    arch = Path("docs/generated/architecture.md")
     arch_text = arch.read_text(encoding="utf-8") if arch.exists() else ""
 
     def run_agent(inputs: dict) -> dict:

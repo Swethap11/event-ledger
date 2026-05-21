@@ -4,9 +4,9 @@ from pathlib import Path
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from agents.client import get_llm
+from ai_sdlc.agents.client import get_llm
 
-PROMPT_FILE = Path(".prompts/qa_agent.md")
+PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "qa_agent.md"
 
 TEST_FILES = [
     "tests/conftest.py",

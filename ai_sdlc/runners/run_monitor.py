@@ -10,7 +10,7 @@ For each new error:
   5. Restarts the FastAPI server if a fix was applied
 
 Usage:
-    uv run python pipeline/run_monitor.py
+    uv run python ai_sdlc/runners/run_monitor.py
 
 Requires OPENAI_API_KEY in environment.
 Requires the FastAPI server to be running (started separately).
@@ -25,12 +25,12 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-# Resolve project root (one level up from pipeline/)
-ROOT = Path(__file__).parent.parent
+# Resolve project root (two levels up from ai_sdlc/runners/)
+ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
-from agents import monitor_agent
+from ai_sdlc.agents import monitor_agent
 
 ERROR_LOG = ROOT / "logs" / "errors.jsonl"
 REPORTS_DIR = ROOT / "reports" / "monitor"

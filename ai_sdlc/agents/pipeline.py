@@ -15,28 +15,28 @@ if env_file.exists():
             k, v = line.split("=", 1)
             os.environ.setdefault(k.strip(), v.strip())
 
-from agents import design_agent, dev_agent, security_agent, qa_agent, docs_agent, changelog_agent
-from agents.guardrails import get_callbacks
-from agents.evals import run_all_evals
-from validators.syntax_validator import validate_syntax
-from validators.lint_validator import validate_lint
-from validators.server_validator import validate_server
-from validators.contract_validator import validate_contract
+from ai_sdlc.agents import design_agent, dev_agent, security_agent, qa_agent, docs_agent, changelog_agent
+from ai_sdlc.agents.guardrails import get_callbacks
+from ai_sdlc.agents.evals import run_all_evals
+from ai_sdlc.validators.syntax_validator import validate_syntax
+from ai_sdlc.validators.lint_validator import validate_lint
+from ai_sdlc.validators.server_validator import validate_server
+from ai_sdlc.validators.contract_validator import validate_contract
 
-SPEC_PATH = Path("event-ledger-candidate-handout.md")
+SPEC_PATH = Path("docs/project/handout.md")
 MAX_RETRIES = 3
 DEV_MODULES = ["core", "models", "repositories", "services", "routes", "main"]
 
 
 def load_spec() -> str:
     candidates = [
-        Path("event-ledger-candidate-handout.md"),
+        Path("docs/project/handout.md"),
         Path(r"C:\Users\nprat\Downloads\event-ledger-candidate-handout.md"),
     ]
     for p in candidates:
         if p.exists():
             return p.read_text(encoding="utf-8")
-    raise FileNotFoundError("Spec file not found. Place event-ledger-candidate-handout.md in the project root.")
+    raise FileNotFoundError("Spec file not found. Place event-ledger-candidate-handout.md in docs/.")
 
 
 def collect_app_code() -> dict[str, str]:
@@ -106,7 +106,7 @@ def main() -> None:
     print("[Pipeline] Running Design Agent...")
     design_out = design_agent.run(spec)
     design_agent.save(design_out)
-    arch_content = Path("docs/architecture.md").read_text(encoding="utf-8")
+    arch_content = Path("docs/generated/architecture.md").read_text(encoding="utf-8")
     token_counts["design_agent"] = 1
     print("[Pipeline] Design Agent done.\n")
 

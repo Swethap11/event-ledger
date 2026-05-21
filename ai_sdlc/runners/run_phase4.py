@@ -39,14 +39,14 @@ if not os.environ.get("GITHUB_TOKEN"):
 if not os.environ.get("GITHUB_TOKEN"):
     raise EnvironmentError("GITHUB_TOKEN not set. Add it to .env")
 
-from agents import dev_agent
-from validators.syntax_validator import validate_syntax
-from validators.lint_validator import validate_lint
-from validators.server_validator import validate_server_and_contract
-from validators.contract_validator import validate_contract
+from ai_sdlc.agents import dev_agent
+from ai_sdlc.validators.syntax_validator import validate_syntax
+from ai_sdlc.validators.lint_validator import validate_lint
+from ai_sdlc.validators.server_validator import validate_server_and_contract
+from ai_sdlc.validators.contract_validator import validate_contract
 
-SPEC_PATH = Path("event-ledger-candidate-handout.md")
-ARCH_PATH = Path("docs/architecture.md")
+SPEC_PATH = Path("docs/project/handout.md")
+ARCH_PATH = Path("docs/generated/architecture.md")
 MODULES = ["services", "routes", "main"]
 MAX_RETRIES = 3
 

@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
+from ai_sdlc.agents.client import get_llm
 
 
 class Component(BaseModel):
@@ -19,7 +19,7 @@ class ArchitectureOutput(BaseModel):
     data_flow: str = Field(description="Step-by-step description of how a POST /events request flows through the system")
 
 
-PROMPT_FILE = Path(__file__).parent.parent / ".prompts" / "design_agent.md"
+PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "design_agent.md"
 
 
 def run(spec_content: str) -> ArchitectureOutput:
@@ -35,7 +35,7 @@ def run(spec_content: str) -> ArchitectureOutput:
     return chain.invoke({"spec": spec_content})
 
 
-def save(output: ArchitectureOutput, output_path: Path = Path("docs/architecture.md")) -> None:
+def save(output: ArchitectureOutput, output_path: Path = Path("docs/generated/architecture.md")) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     components_table = "\n".join(

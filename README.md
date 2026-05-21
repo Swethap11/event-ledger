@@ -31,13 +31,13 @@ REST API for ingesting financial events with guarantees for:
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Install dependencies and start (auto-detects uv, installs if missing)
+./scripts/start.sh          # Linux / Mac
+.\scripts\start.ps1         # Windows PowerShell
+
+# Or manually:
 uv sync --extra dev --extra agents
-
-# Copy env and add your GitHub Models token
-cp .env.example .env
-
-# Run the API
+cp .env.example .env   # add your GitHub Models token
 uv run uvicorn app.main:app --reload
 ```
 
@@ -86,25 +86,37 @@ architecture.md   app/ (16 files)      security-review.md  16 tests, 93% coverag
 Run individual phases:
 
 ```bash
-uv run python run_phase2.py   # Design Agent
-uv run python run_phase3.py   # Dev — core, models, repositories
-uv run python run_phase4.py   # Dev — services, routes, main
-uv run python run_phase5.py   # Security review
-uv run python run_phase6.py   # QA tests
-uv run python run_phase7.py   # Docs + changelog
+uv run python ai_sdlc/runners/run_phase2.py   # Design Agent
+uv run python ai_sdlc/runners/run_phase3.py   # Dev — core, models, repositories
+uv run python ai_sdlc/runners/run_phase4.py   # Dev — services, routes, main
+uv run python ai_sdlc/runners/run_phase5.py   # Security review
+uv run python ai_sdlc/runners/run_phase6.py   # QA tests
+uv run python ai_sdlc/runners/run_phase7.py   # Docs + changelog
+uv run python ai_sdlc/runners/run_monitor.py  # Production monitor (starts server + watches for errors)
 ```
 
 Requires `GITHUB_TOKEN` in `.env` (see `.env.example`).
 
 ## Docs
 
+**Project — AI-augmented SDLC**
 | File | Contents |
 |---|---|
-| [APPROACH.md](APPROACH.md) | Traditional vs AI-augmented SDLC comparison |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System design and agent pipeline |
-| [SOLUTION.md](SOLUTION.md) | Stack decisions per layer |
-| [PROGRESS.md](PROGRESS.md) | Build progress ledger |
-| [docs/api-guide.md](docs/api-guide.md) | Full API reference |
+| [docs/project/walkthrough.md](docs/project/walkthrough.md) | How this was built — decisions, tools, what happened |
+| [docs/project/approach.md](docs/project/approach.md) | AI-augmented SDLC pipeline and agent roles |
+| [docs/project/architecture.md](docs/project/architecture.md) | System design, Mermaid diagram, data flow |
+| [docs/project/stack.md](docs/project/stack.md) | Stack decisions per layer with alternatives considered |
+
+**Application**
+| File | Contents |
+|---|---|
+| [docs/app/running.md](docs/app/running.md) | How to start, configure, and run the API |
+| [docs/app/api-reference.md](docs/app/api-reference.md) | Endpoints, request/response, expected behaviour |
+
+**Other**
+| File | Contents |
+|---|---|
+| [docs/project/progress.md](docs/project/progress.md) | Build progress ledger |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 ## Repository

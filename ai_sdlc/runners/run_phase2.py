@@ -1,6 +1,6 @@
 """
 Phase 2 — Design Agent
-Reads the spec, produces docs/architecture.md with a Mermaid diagram.
+Reads the spec, produces docs/generated/architecture.md with a Mermaid diagram.
 Run: python run_phase2.py
 """
 
@@ -47,11 +47,11 @@ if not os.environ.get("GITHUB_TOKEN"):
         "Get one at: github.com → Settings → Developer settings → Personal access tokens"
     )
 
-from agents import design_agent
+from ai_sdlc.agents import design_agent
 
 SPEC_CANDIDATES = [
-    Path("event-ledger-candidate-handout.md"),
-    Path(r"C:\Users\nprat\Desktop\event-ledger\event-ledger-candidate-handout.md"),
+    Path("docs/project/handout.md"),
+    Path(r"C:\Users\nprat\Desktop\event-ledger\docs\project\handout.md"),
 ]
 
 spec = None
@@ -74,4 +74,4 @@ print("\n[Phase 2] Done.")
 print(f"  Summary     : {output.summary}")
 print(f"  Components  : {len(output.components)}")
 print(f"  Decisions   : {len(output.design_decisions)}")
-print(f"  Output file : docs/architecture.md")
+print(f"  Output file : docs/generated/architecture.md")

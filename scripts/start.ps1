@@ -10,3 +10,5 @@ uv sync
 
 Write-Host "Starting Event Ledger API..."
 uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# To run with agentic monitor instead:
+# uv run python ai_sdlc/runners/run_monitor.py

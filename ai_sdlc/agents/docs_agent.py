@@ -1,10 +1,10 @@
 from pathlib import Path
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-from agents.client import get_llm
+from ai_sdlc.agents.client import get_llm
 import httpx
 
-PROMPT_FILE = Path(".prompts/docs_agent.md")
+PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "docs_agent.md"
 
 
 class DocsOutput(BaseModel):
@@ -37,7 +37,7 @@ def run(openapi_spec: dict, spec_content: str) -> DocsOutput:
     return chain.invoke({"system_prompt": prompt_template, "spec": spec_content, "openapi": str(openapi_spec)})
 
 
-def save(output: DocsOutput, output_path: Path = Path("docs/api-guide.md")) -> None:
+def save(output: DocsOutput, output_path: Path = Path("docs/generated/api-guide.md")) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(output.api_guide, encoding="utf-8")
     print(f"[Docs Agent] API guide written to {output_path}")

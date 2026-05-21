@@ -1,18 +1,20 @@
+import uuid
 import httpx
 
 BASE_URL = "http://localhost:8000"
 
-VALID_EVENT = {
-    "eventId": "contract-test-001",
-    "accountId": "acct-contract-test",
-    "type": "CREDIT",
-    "amount": 100.00,
-    "currency": "USD",
-    "eventTimestamp": "2026-05-15T10:00:00Z",
-}
-
 
 def validate_contract(base_url: str = BASE_URL) -> tuple[bool, list[str]]:
+    # Fresh IDs every run — avoids false 200s from a persistent ledger.db
+    run_id = uuid.uuid4().hex[:8]
+    VALID_EVENT = {
+        "eventId": f"contract-{run_id}",
+        "accountId": f"acct-contract-{run_id}",
+        "type": "CREDIT",
+        "amount": 100.00,
+        "currency": "USD",
+        "eventTimestamp": "2026-05-15T10:00:00Z",
+    }
     errors: list[str] = []
 
     with httpx.Client(base_url=base_url, timeout=10) as client:

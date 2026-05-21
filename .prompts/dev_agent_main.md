@@ -35,5 +35,6 @@ from app.routes import events, accounts
 ```
 
 ## Rules
+- Keep every line at or below 88 characters (Ruff E501).
 - No placeholders. No TODOs. Complete file only.
 - The global exception handler must catch `Exception` and return 500, logging the full traceback internally but never exposing it to the client.

@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from sqlmodel import Session, func, select
@@ -25,11 +26,11 @@ class EventRepository:
         event = Event(
             event_id=payload.eventId,
             account_id=payload.accountId,
-            type=payload.type,
+            type=payload.type.value,
             amount=payload.amount,
             currency=payload.currency,
             event_timestamp=payload.eventTimestamp,
-            metadata_json=payload.metadata,
+            metadata_json=json.dumps(payload.metadata) if payload.metadata else None,
             received_at=datetime.utcnow(),
         )
         self.session.add(event)
@@ -39,23 +40,27 @@ class EventRepository:
 
     def get_balance(self, account_id: str) -> tuple[float, str | None]:
         credit_sum = (
-            self.session.exec(
+            self.session.scalar(
                 select(func.sum(Event.amount)).where(
                     Event.account_id == account_id, Event.type == "CREDIT"
                 )
-            ).one()[0]
+            )
             or 0.0
         )
         debit_sum = (
-            self.session.exec(
+            self.session.scalar(
                 select(func.sum(Event.amount)).where(
                     Event.account_id == account_id, Event.type == "DEBIT"
                 )
-            ).one()[0]
+            )
             or 0.0
         )
+        events = self.session.exec(
+            select(Event).where(Event.account_id == account_id).limit(1)
+        ).all()
+        currency = events[0].currency if events else None
         balance = round(credit_sum - debit_sum, 10)
-        return balance, "USD"  # Assuming currency is always USD for simplicity
+        return balance, currency
 
     def account_exists(self, account_id: str) -> bool:
         statement = select(Event).where(Event.account_id == account_id).limit(1)
